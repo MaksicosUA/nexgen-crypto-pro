@@ -1,0 +1,32 @@
+[Unit]
+Description=NexGen Crypto Bot (Telegram pipeline control)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nexgen
+WorkingDirectory=/opt/nexgen_crypto_pro
+
+# Use the interpreter from the pipeline environment
+ExecStart=/opt/nexgen_crypto_pro/pipeline/.venv/bin/python /opt/nexgen_crypto_pro/pipeline/bot_pipeline_control.py
+
+# Restart on failure (after 10 s)
+Restart=on-failure
+RestartSec=10
+
+# Environment variables are loaded from .env via python-dotenv,
+# but systemd also needs to know the file path
+EnvironmentFile=/opt/nexgen_crypto_pro/.env
+
+# Logs go to journald (view with: journalctl -u nexgen-bot -f)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexgen-bot
+
+# Security restrictions
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

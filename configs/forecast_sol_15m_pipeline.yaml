@@ -1,0 +1,37 @@
+# Dedicated paper-first input for forecast journal producer.
+# Paths are resolved relative to this config file.
+
+base_path: "../state/forecast_sol_15m"
+data_path: "../state/forecast_sol_15m/base_data"
+plot_path: "../state/forecast_sol_15m/plot"
+log_file: "../state/forecast_sol_15m/pipeline.log"
+archive_path: "../state/forecast_sol_15m/archive"
+merged_file: "../state/forecast_sol_15m/full_data_base/merged.csv"
+
+symbols:
+  - SOL/USDT
+
+exchanges:
+  - binance
+
+collection_mode: "days"
+history_days: 3
+delta_days: 3
+delta_hours: 72
+custom_start: ""
+custom_end: ""
+timeframe: "15m"
+limit: 1000
+
+async:
+  base_delay: 1.5
+  max_concurrent_requests: 2
+  max_retries: 3
+  request_timeout: 10
+
+alerts:
+  telegram_enabled: false
+  debug_mode: false
+
+output_format: "csv"
+use_cache: false

@@ -1,0 +1,53 @@
+# SOL/USDC 15m — only the continuous segment after the relisting.
+# Paths are resolved relative to this config's directory.
+#
+# Why custom rather than full: in September 2022 Binance auto-converted USDC to BUSD,
+# and SOL/USDC effectively did not trade until 2023-12-28. In the full history this
+# leaves a 455-day gap. create_sequences builds windows from consecutive rows
+# without looking at timestamps, so September 2022 and December 2023 would be
+# stitched together at the seam, and SMA/EMA/RSI/MACD/ATR would be computed across the gap.
+#
+# This config collects only the post-relisting segment, so that indicators are computed
+# from scratch on a continuous series. The full history (with the gap) remains in
+# configs/sol_usdc_15m_full_pipeline.yaml for reference.
+#
+# Usage:
+#   PIPELINE_CONFIG=configs/sol_usdc_15m_clean_pipeline.yaml \
+#     pipeline/.venv/bin/python pipeline/crypto_pipeline_v4.3.py
+
+base_path: "../data/sol_usdc_15m_clean"
+data_path: "../data/sol_usdc_15m_clean/base_data"
+plot_path: "../data/sol_usdc_15m_clean/plot"
+log_file: "../data/sol_usdc_15m_clean/pipeline.log"
+archive_path: "../data/sol_usdc_15m_clean/archive"
+merged_file: "../data/sol_usdc_15m_clean/full_data_base/merged_sol_usdc_15m_clean.csv"
+
+symbols:
+  - SOL/USDC
+
+exchanges:
+  - binance
+
+collection_mode: "custom"
+history_days: 0
+delta_days: 0
+delta_hours: 0
+# First candle after the relisting. custom_end is intentionally in the future: the exchange
+# will not return bars that do not exist, so collection stops at the last closed bar.
+custom_start: "2023-12-28 08:00:00"
+custom_end: "2026-12-31 00:00:00"
+timeframe: "15m"
+limit: 1000
+
+async:
+  base_delay: 1.0
+  max_concurrent_requests: 2
+  max_retries: 3
+  request_timeout: 20
+
+alerts:
+  telegram_enabled: false
+  debug_mode: false
+
+output_format: "csv"
+use_cache: false

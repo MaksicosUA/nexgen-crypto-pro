@@ -1,0 +1,76 @@
+
+#model:
+  #modes: [lstm, gru]  #gru lstm train_both
+  #run_mode: sequential # paralel
+  #use_mixed_precision: true # false
+  #memory_cleanup: true # false
+
+
+#telegram:
+  #enabled: true
+  #token: "YOUR_TOKEN"
+  #chat_id: "YOUR_CHAT_ID"
+
+{
+    
+    "global_config": {
+        "val_size": 0.16,
+        "test_size": 0.16,
+        "steps_ahead": 2,
+        "window_size": 30,
+        "enable_logging": true,
+        "log_errors_separately": true,
+        "retrain_existing": true
+              
+    },
+    "exchanges": {
+        "binance": true,
+        "bybit": true,
+        "kucoin": true,
+        "okx": true,        
+        "gateio": true,      
+        "mexc": true,         
+        "coinbase": true,        
+        "bitget": true                
+    },
+    "symbols": {
+        "BTCUSDT": true,
+        "ETHUSDT": true,
+        "DOGEUSDT": true,
+        "BNBUSDT": true,
+        "LTCUSDT": true,   
+        "PENGUUSDT": true,
+        "TURBOUSDT": true,
+        "SOLUSDT": true,
+        "VIRTUALUSDT": true,
+        "OMUSDT": true,
+        "MOODENGUSDT": true,
+        "XRPUSDT": true,     
+        "ADAUSDT": true,     
+        "AVAXUSDT": true,    
+        "SHIBUSDT": true,    
+        "TRXUSDT": true,    
+        "ARBUSDT": true,     
+        "APTUSDT": true    
+    },
+    "model_config": {
+        "num_layers": 2,
+        "units": 64,
+        "dropout_0": 0.33,
+        "batch_size": 128,
+        "epochs": 100,
+        "validation_split": 0.2,
+        "patience_early_stop": 20,
+        "patience_reduce_lr": 10,
+        "reduce_lr_factor": 0.5,
+        "lr" : 0.00044,
+        "min_lr": 1e-07
+    },
+
+    "paths": {
+  "error_log": "logs/error_log.txt",
+  "trained_log": "logs/trained_log.txt",
+  "models_search_root": "models/saved_models"
+}
+
+}

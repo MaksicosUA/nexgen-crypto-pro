@@ -1,0 +1,36 @@
+# Test config — safe run without Telegram
+# Used only to check that the pipeline works
+# Run: PIPELINE_CONFIG=pipeline/test_run/test_config.yaml pipeline/.venv/bin/python pipeline/crypto_pipeline_v4.3.py
+
+base_path: "test_run"
+data_path: "test_run/base_data"
+plot_path: "test_run/plot"
+log_file: "test_run/logs/crypto_log.txt"
+merged_file: "test_run/full_data_base/merged.csv"
+
+symbols:
+  - LTC/USDT
+
+exchanges:
+  - binance
+
+collection_mode: "days"
+delta_days: 1
+delta_hours: 24
+custom_start: ""
+custom_end: ""
+timeframe: "30m"
+limit: 100
+
+async:
+  base_delay: 1.5
+  max_concurrent_requests: 2
+  max_retries: 2
+  request_timeout: 10
+
+alerts:
+  telegram_enabled: false
+  debug_mode: false
+
+output_format: "csv"
+use_cache: false

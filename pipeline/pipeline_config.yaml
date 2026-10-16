@@ -1,0 +1,69 @@
+base_path: "."
+data_path: "base_data"
+plot_path: "plot"
+log_file: "logs/crypto_log.txt"
+merged_file: "full_data_base/merged.csv"
+
+symbols:
+  #- BTC/USDT
+  #- ETH/USDT
+  - LTC/USDT
+  #- BNB/USDT
+  #- DOGE/USDT
+  #- PENGU/USDT
+  #- #OM/USDT
+  #- #TURBO/USDT 
+  #- SOL/USDT
+  #- VIRTUAL/USDT
+  #- OM/USDT
+  #- MOODENG/USDT
+  # - XRP/USDT     # high market cap, frequently pumped
+  #- ADA/USDT      # actively traded, cheap entry
+  #- AVAX/USDT     # popular L1 with an active ecosystem
+  #- MATIC/USDT    # cheap, frequent spikes
+  #- SHIB/USDT     # speculative but liquid
+  #- DOT/USDT      # fundamentally interesting
+  #- TRX/USDT      # widely used for on-chain transactions
+  #- ARB/USDT      # actively farmed and traded
+  #- APT/USDT      # new L1, high volatility
+  #- marged
+
+exchanges:
+  - binance
+  #- bybit 
+  #- kucoin
+  #- okx       # good API, high volumes
+  #- gateio   # many coins available
+  #- mexc      # volume growing fast
+  #- coinbase # for USD spot data (no USDT)
+  #- bitget     # popular for altcoin trading
+
+collection_mode: "auto"  # auto | full | days | hours | custom
+# auto — end=today, start=today-history_days (default)
+# full — entire history since the coin was listed
+# custom — manual dates custom_start/custom_end
+custom_start: "2025-07-25 00:00:00"
+custom_end: "2025-07-28 00:00:00"
+delta_days: 2
+delta_hours: 24
+timeframe: "30m"
+limit: 1000
+
+# Interpreter the bot uses to launch the pipeline (subprocess).
+# Priority: PIPELINE_PYTHON (env) → this field → the bot's sys.executable.
+# Example: pipeline_python: "/abs/path/to/pipeline/.venv/bin/python"
+pipeline_python: ""  # leave empty to use the bot's sys.executable
+
+async:
+  base_delay: 1.4
+  max_concurrent_requests: 5
+  max_retries: 3
+  request_timeout: 10
+
+alerts:
+  telegram_enabled: true
+  debug_mode: false
+
+output_format: "csv" # "csv", "json" or "both"
+
+use_cache: false  # true — use the cache, false — always build a new merged file

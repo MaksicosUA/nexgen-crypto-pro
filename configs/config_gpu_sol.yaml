@@ -1,0 +1,55 @@
+# GPU training config (RTX 3060, 12 GB) for the SOL datasets.
+#
+# Format: YAML. The base configs/config.yaml historically has a JSON body,
+# but the training scripts read it via yaml.safe_load, so plain YAML works
+# just as well and is much easier to read.
+#
+# Differences from configs/config.yaml:
+#   batch_size       128 → 512   the main GPU speed-up lever; on CPU a large
+#                                batch gave no gain, on Ampere with tensor cores
+#                                it does. 12 GB of VRAM with window=30 and units=64
+#                                handles 512 with plenty of headroom.
+#   retrain_existing true → false  on the first training run on a new dataset
+#                                there is nothing to fine-tune: new stem, no existing model.
+#   dropout_rate                 the base config sets dropout_0, but the training scripts
+#                                read dropout_rate, so dropout_0 is silently
+#                                ignored and the default 0.3 is used. Here the key
+#                                has the correct name and the value is set explicitly.
+#
+# The training scripts always enable mixed precision (float16) on their own; on Ampere
+# this is the standard mode. If predictions contain NaN, switch the policy to float32 and retrain.
+#
+# Usage:
+#   .venv/bin/python models/train_gru.py \
+#     --config configs/config_gpu_sol.yaml \
+#     --file data/sol_usdt_15m_full/full_data_base/merged_sol_usdt_15m.csv
+
+global_config:
+  val_size: 0.16
+  test_size: 0.16
+  steps_ahead: 2
+  window_size: 30
+  enable_logging: true
+  log_errors_separately: true
+  retrain_existing: false
+
+model_config:
+  num_layers: 2
+  units: 64
+  dropout_rate: 0.3
+  batch_size: 512
+  epochs: 100
+  validation_split: 0.2
+  patience_early_stop: 20
+  patience_reduce_lr: 10
+  reduce_lr_factor: 0.5
+  # 0.001 is the value all of the project's models were actually trained with.
+  # Before 2026-08-12 the lr key was not read at all (Adam was created without learning_rate),
+  # so the 0.00044 set in the base config was never applied.
+  lr: 0.001
+  min_lr: 1.0e-07
+
+paths:
+  error_log: "logs/error_log.txt"
+  trained_log: "logs/trained_log.txt"
+  models_search_root: "models/saved_models"

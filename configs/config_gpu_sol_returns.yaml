@@ -1,0 +1,56 @@
+# GPU training with a "return" target instead of a "price level" target.
+#
+# The only difference from config_gpu_sol.yaml is the target key. Everything else
+# intentionally matches, so that any difference in metrics is due to the problem
+# formulation rather than the hyperparameters.
+#
+# Why the level target does not work. Two runs on real data:
+#   SOL/USDT 6 years:   MAPE 12.58%, directional accuracy 48.93%
+#   SOL/USDC 2.6 years: MAPE  1.97%, directional accuracy 48.27%
+#   persistence:        MAPE  0.20-0.25%
+# MAPE changed sixfold, tracking the width of the price range, while directional
+# accuracy did not move and stayed below 50%. The entire price level is already in
+# the input window, persistence captures it with R² of about 0.999, and the model is
+# left with a competition it cannot win.
+#
+# Usage:
+#   scripts/with_gpu.sh .venv/bin/python models/train_gru.py \
+#     --config configs/config_gpu_sol_returns.yaml \
+#     --file data/sol_usdc_15m_clean/full_data_base/merged_sol_usdc_15m_clean.csv
+
+global_config:
+  val_size: 0.16
+  test_size: 0.16
+  steps_ahead: 2
+  window_size: 30
+  enable_logging: true
+  log_errors_separately: true
+  retrain_existing: false
+
+  # level          — legacy, absolute close price steps_ahead bars ahead
+  # log_return_pct — 100 * ln(close[t+k] / close[t]), a stationary target
+  target: log_return_pct
+  # Return multiplier. 100 converts to percent: a typical 30-minute move
+  # becomes ~0.25 instead of ~0.0025, so MSE gradients do not degenerate.
+  return_scale: 100.0
+
+model_config:
+  num_layers: 2
+  units: 64
+  dropout_rate: 0.3
+  batch_size: 512
+  epochs: 100
+  validation_split: 0.2
+  patience_early_stop: 20
+  patience_reduce_lr: 10
+  reduce_lr_factor: 0.5
+  # 0.001 is the value all of the project's models were actually trained with.
+  # Before 2026-08-12 the lr key was not read at all (Adam was created without learning_rate),
+  # so the 0.00044 set in the base config was never applied.
+  lr: 0.001
+  min_lr: 1.0e-07
+
+paths:
+  error_log: "logs/error_log.txt"
+  trained_log: "logs/trained_log.txt"
+  models_search_root: "models/saved_models"

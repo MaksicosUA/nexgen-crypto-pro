@@ -1,0 +1,45 @@
+# Full SOL/USDT 15m history for model training.
+# Paths are resolved relative to this config's directory.
+#
+# SOL/USDT has traded on Binance continuously since 2020-08-11, the longest clean
+# SOL history available. The same pair is used in configs/forecast_sol_15m_pipeline.yaml,
+# i.e. in the production forecast journal loop.
+#
+# Usage:
+#   PIPELINE_CONFIG=configs/sol_usdt_15m_full_pipeline.yaml \
+#     pipeline/.venv/bin/python pipeline/crypto_pipeline_v4.3.py
+
+base_path: "../data/sol_usdt_15m_full"
+data_path: "../data/sol_usdt_15m_full/base_data"
+plot_path: "../data/sol_usdt_15m_full/plot"
+log_file: "../data/sol_usdt_15m_full/pipeline.log"
+archive_path: "../data/sol_usdt_15m_full/archive"
+merged_file: "../data/sol_usdt_15m_full/full_data_base/merged_sol_usdt_15m.csv"
+
+symbols:
+  - SOL/USDT
+
+exchanges:
+  - binance
+
+collection_mode: "full"
+history_days: 0
+delta_days: 0
+delta_hours: 0
+custom_start: ""
+custom_end: ""
+timeframe: "15m"
+limit: 1000
+
+async:
+  base_delay: 1.0
+  max_concurrent_requests: 2
+  max_retries: 3
+  request_timeout: 20
+
+alerts:
+  telegram_enabled: false
+  debug_mode: false
+
+output_format: "csv"
+use_cache: false

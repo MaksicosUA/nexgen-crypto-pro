@@ -1,0 +1,56 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+venv310/
+pipeline/.venv/
+
+# IDE / editor settings
+.idea/
+.vscode/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Project runtime data
+data/
+logs/
+sessions/
+state/
+pipeline/base_data/
+pipeline/full_data_base/
+pipeline/archive/
+pipeline/plot/
+pipeline/logs/
+pipeline/pipeline_stdout.log
+pipeline/pipeline_stderr.log
+
+# ML artifacts
+models/saved/
+models/saved_models/
+*.keras
+*.h5
+*.pkl
+*.joblib
+
+# Generated reports and bundles
+SUMMARY_REPORT*.md
+*.zip
+session_bundle.zip
+
+# Local backups and temporary files
+*.bak.*
+*.tmp
+
+# User access / personal data (Telegram IDs, names, interaction history)
+pipeline/access.json
+
+# Generated tools (not project code)
+pipeline/get-pip.py
